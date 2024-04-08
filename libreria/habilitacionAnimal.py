@@ -36,10 +36,13 @@ def HabilitacionAnimal(animalLeido,animal):
     horaGuardar=""
     retorno=[9999,False]
     animalInhabilitado=[]
+    diaReal=0
+    pesoHora=[]
+
 #for para crear un nuevo array con todos los elementos que
 #contengan el numero de caravana leido    
     for i in range(len(animal)):
-        
+    
         if (animal[i].number==animalLeido):
             nro=animal[i].number
             diaInicio=animal[i].dayStart
@@ -76,11 +79,48 @@ def HabilitacionAnimal(animalLeido,animal):
     
 #se le asigna el valor de la hora que es a la variable horaReal para poder comparar
     horaReal=datetime.datetime.now()
+    diaReal=int((horaReal-int(food[0].dayStart))/86400)
     horaReal=horaReal.strftime('%H')
 
-#compara la dieta del dia con la hora para saber si da la comida
     for i in range(len(food)):
-        if (int(food[i].horary)<=int(horaReal):
+        if(food[i].dispense=="0000000000000"):
+            pesoHora.append([food[i].horary,food[i].load])
+
+#compara la dieta del dia con la hora para saber si da la comida
+    
+    diaFood=(int(food[-1].dayStart)-int(food[-1].dispense))/86400
+    #horaFood=int(int(food[-1].dispense).strftime('%H'))
+
+    if ((diaFood<diaReal) or (food[-1].dispense=="0000000000000")):
+        if(horaReal>=pesoHora[0,0]):
+            #guarda datos y habilita
+            horaFood=horaFood
+        else:
+            #guarda datos y desabilita
+            horaFood=horaFood
+    else:
+        if(diaFood==diaReal):
+            for i in range(len(pesoHora)):
+                if(food[-1].horary==pesoHora[(-1*i)-1,0]):
+                    if(((i*-1)+1)==0):
+                        horaFood=24
+                    else:
+                        horaFood=pesoHora[(-1*i)+1,0]
+            if(horaReal >= horaFood):
+                #guarda datos y habilita
+                horaFood=horaFood
+            else:
+                #guarda datos y desabilita
+                horaFood=horaFood
+        else:
+            alarmaSincronizacion=True
+
+              
+    
+    
+    
+    #for i in range(len(food)):
+    #    if (int(food[i].horary)<=int(horaReal):
             
         #if ((int(food[i].horary)<=int(horaReal)) and (food[i].eat=="0")):
         #    retorno[1]=int(food[i].load)
@@ -88,26 +128,26 @@ def HabilitacionAnimal(animalLeido,animal):
         #    food[i].eat="1"
 
                 #########
-            for j in range(len(animal)):
-                if((animal[j].number==food[i].number) and (animal[j].dayStart==food[i].dayStart) and (animal[j].dayDiet==food[i].dayDiet) and (animal[j].load==food[i].load) and (animal[j].horary==food[i].horary)):
-                    animal[j].eat="1"
-                    horaGuardar=int(time.time()*1000)
-                    animal[j].dispensed=str(horaGuardar)
-                    break
+            #for j in range(len(animal)):
+            #    if((animal[j].number==food[i].number) and (animal[j].dayStart==food[i].dayStart) and (animal[j].dayDiet==food[i].dayDiet) and (animal[j].load==food[i].load) and (animal[j].horary==food[i].horary)):
+            #        animal[j].eat="1"
+            #        horaGuardar=int(time.time()*1000)
+            #        animal[j].dispensed=str(horaGuardar)
+            #        break
                 #########
-            print(retorno)
-            animal=datosBD.GuardarDatoReal(animal)
-            break
-        else:
-            horaGuardar=int(time.time()*1000)
-            animal.append(DatosAnimal(animalLeido,"0000000000000",str(diaDietaActual).zfill(3),"0000","00","0",str(horaGuardar)))
-            animal=datosBD.GuardarDatoReal(animal)
-            retorno[1]=0
-            retorno[0]=True
+            #print(retorno)
+            #animal=datosBD.GuardarDatoReal(animal)
+            #break
+        #else:
+        #    horaGuardar=int(time.time()*1000)
+        #    animal.append(DatosAnimal(animalLeido,"0000000000000",str(diaDietaActual).zfill(3),"0000","00","0",str(horaGuardar)))
+        #    animal=datosBD.GuardarDatoReal(animal)
+        #    retorno[1]=0
+        #    retorno[0]=True
 
-    food.clear()
-    nutricion.clear()
-    nutricionAUX.clear()    
+    #food.clear()
+    #nutricion.clear()
+    #nutricionAUX.clear()    
     #si el animal es desconocido se le administra una dieta predeterminada
 
     return retorno,animal
