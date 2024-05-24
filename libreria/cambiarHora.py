@@ -1,3 +1,5 @@
+###importacion de librerias
+
 import RPi.GPIO as GPIO
 import time
 import datetime
@@ -6,9 +8,13 @@ from libreria import teclado
 from libreria import LCD_LIB_16x2 as LCD
 from libreria import cambiarHora
 
-
+###declaracion de la libreria del manejo del menu
 
 def CambiarHora():
+
+###toma la hora y le asigna los valores a las variables que van a calibrar
+###y  el resto de variables que va a usar la libreria
+
     LCD.lcd_string("calibrar fecha",LCD.LINE_1)
     fecha=datetime.datetime.now()    
     day=int(fecha.strftime("%d"))
@@ -26,8 +32,11 @@ def CambiarHora():
     confirmar=False
     guardar=True
     
+###while para que quede en bucle hasta que termine de calibrar la hora
     
     while(ok):
+###primer if para hacer el parpadeo de del termino a cambiar,el segundo para
+###llamar la funcion de teclado
         if(flagDisp > 20):
             flagDisp=0
         else:
@@ -35,6 +44,9 @@ def CambiarHora():
         if(key==""):     
             key=teclado.Teclado(key,count)
             print(key)
+###con up y down sube y baja el valor pero lleva muchos if anidados para poder
+###hacer bien el hecho de que los dia depende el mes pueden tener 28,29,30 o 31 
+###diasy segun el valor de cursor los que cambia es el valor de dia,mes o año 
         if((not calHora)and(not confirmar)):
             if(key=="Up"):
                 if(cursor==1):
@@ -96,6 +108,8 @@ def CambiarHora():
                         year=99
                 else:
                     curso=1
+###con right y left cambio el valor de cursor por lo tanto selecciono que 
+###termino voy a cambiar con up y down y con enter guardo los nuevos valores
             if(key=="Right"):
                 cursor=cursor+1
                 key=""
@@ -110,10 +124,7 @@ def CambiarHora():
                 cursor=1
                 key=""
                 calHora=True
-    #	anioAUX=str(year+2000).zfill(4)+str(month).zfill(2)+str(day).zfill(2)
-    #	os.system("sudo date +%Y%m%d -s '" + anioAUX +"'")
-    #	os.system("sudo hwclock --systohc")
-            
+
             if(flagDisp<10):
                 LCD.lcd_string(str(day).zfill(2) + "/" + str(month).zfill(2) + "/" + str(year+2000).zfill(4),LCD.LINE_2)
             else:
@@ -125,6 +136,8 @@ def CambiarHora():
                     LCD.lcd_string(str(day).zfill(2) + "/" + str(month).zfill(2) + "/" + "    ",LCD.LINE_2)
                 else:
                     cursor==1
+###en el elif que va a entrar solo cuando aprete enter en la parte de fecha
+###analogo que para la fecha es el funcioanmiento para los dias
         elif((calHora) and (not confirmar)):
             if(key=="Up"):
                 if(cursor==1):
@@ -167,12 +180,8 @@ def CambiarHora():
                 key=""
                 calHora=False
                 confirmar=True
-    #	fechaAUX=str(hour).zfill(2)+":"+str(minute).zfill(2)+":00"
-    #	os.system("sudo date +%T -s '" + fechaAUX + "'")
-    #	os.system("sudo hwclock --systohc")
-                
-            else:
-                
+###aca se muestra igual que en la fecha los valores que van cambiando
+            else:                
                 LCD.lcd_string("calibrar hora",LCD.LINE_1)
             if(flagDisp<10):
                 LCD.lcd_string(str(hour).zfill(2) + ":" + str(minute).zfill(2),LCD.LINE_2)
@@ -183,7 +192,8 @@ def CambiarHora():
                     LCD.lcd_string(str(hour).zfill(2) + ":" + "  ",LCD.LINE_2)
                 else:
                     cursor==1
-                    
+###en este else nos muestra fecha y hora y le tenemos que dar enter para 
+###confirmar el cambio de fecha y hora  
         else:
             if(key=="Up"):
                 key=""
@@ -227,17 +237,6 @@ def CambiarHora():
                 else:
                     LCD.lcd_string("guardar         ",LCD.LINE_2)
                 
-            
-                    
-                    
-                    
-                    
-#salir=True
-#	while(salir):
-#   	if(not GPIO.input(7) and not GPIO.input(29) and not GPIO.input(31) and not GPIO.input(33) and GPIO.input(37)):
-#       	time.sleep(10)
-#     		if(not GPIO.input(7) and not GPIO.input(29) and not GPIO.input(31) and not GPIO.input(33) and GPIO.input(37)):
-#         	salir=False
-#       menus=False
+        
 
     return

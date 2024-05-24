@@ -8,6 +8,12 @@ class DatosAnimal:
         self.eat = eat
         self.dispensed = dispensed
 
+class DatosAlarmas:
+    def __init__(self, type: str, number:str, hour:str):
+        self.type = type
+        self.number = number
+        self.hour = hour
+
 import os
 
 def GuardarDatoReal(Caravana):
@@ -15,13 +21,7 @@ def GuardarDatoReal(Caravana):
     texto=open("archivos/datoAnimal.txt", "w")
 
     for i in range(len(Caravana)):
-        print(Caravana[i].number)
-        print(Caravana[i].dayStart)
-        print(Caravana[i].dayDiet)
-        print(Caravana[i].load)
-        print(Caravana[i].horary)
-        print(Caravana[i].eat)
-        print(Caravana[i].dispensed)
+
         texto.write(str(Caravana[i].number)+str(Caravana[i].dayStart)+str(Caravana[i].dayDiet)+str(Caravana[i].load)+str(Caravana[i].horary)+str(Caravana[i].eat)+str(Caravana[i].dispensed+"\n"))
     
     texto.close()
@@ -70,3 +70,62 @@ def LeerDatoAnimal():
     texto.close()
 
     return nutricion
+
+def GuardarAlarmas(alarmas):
+    
+    texto=open("archivos/Alarmas.txt", "w")
+
+    for i in range(len(alarmas)):
+
+        texto.write(str(alarmas[i].type)+str(alarmas[i].number)+str(alarmas[i].hour+"\n"))
+    
+    texto.close()
+
+    readAlarmas=[]
+    
+    texto=open("archivos/Alarmas.txt", "r")
+
+    for line in texto.readlines():
+    
+        tipo=line[0:1]
+        numero=line[1:16]
+        horario=line[16:29]
+        if((horario=="\n") or (horario=="")):
+            horario='0000000000000'
+    
+        readAlarmas.append(DatosAlarmas(tipo,numero,horario))
+    
+    texto.close()
+
+    #readAlarmas.append(alarmas)
+
+    return readAlarmas
+
+def GuardarLineaAlarmas(alarma):
+
+    texto=open("archivos/Alarmas.txt", "a")
+
+    texto.write(str(alarma.type)+str(alarma.number)+str(alarma.hour)+'\n')
+
+    texto.close()
+
+
+
+def LeerAlarmas():
+
+    readAlarmas=[]
+    texto=open("archivos/Alarmas.txt", "r")
+
+    for line in texto.readlines():
+    
+        tipo=line[0:1]
+        numero=line[1:16]
+        horario=line[16:29]
+        if((horario=="\n") or (horario=="")):
+            horario='0000000000000'
+    
+        readAlarmas.append(DatosAlarmas(tipo,numero,horario))
+    
+    texto.close()
+
+    return readAlarmas
